@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
 import { formatDate } from "../utils/formatDate"
-
 
 export const Playlist = ({ id }) => {
 
     const [playlist, setPlaylist] = useState(null)
 
-    // const { id } = useParams()
     const token = localStorage.getItem('token')
 
     useEffect(() => {
@@ -23,10 +20,22 @@ export const Playlist = ({ id }) => {
         }
 
         getPlaylist()
-    }, [])
+    }, [id, token])
 
+    const changeTrack = async (trackId) => {
+        await fetch('https://api.spotify.com/v1/me/player/play', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                context_uri: `spotify:playlist:${id}`,
+                offset: { uri: `spotify:track:${trackId}` }
+            })
+        })
+    }
 
-    console.log(playlist)
     return (
         <>
             {
@@ -65,7 +74,7 @@ export const Playlist = ({ id }) => {
                                 <tbody>
                                     {
                                         playlist.tracks.items.map((track, i) => (
-                                            <tr className="hover:bg-[#2A2A2A] " key={track.track.id}>
+                                            <tr className="hover:bg-[#2A2A2A] " key={track.track.id} onClick={() => changeTrack(track.track.id)}>
                                                 <td className="py-2 px-4">{i + 1}</td>
                                                 <td className="py-2 px-4 max-w-[500px]">
                                                     <div className="flex items-center gap-2">
