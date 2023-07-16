@@ -20,9 +20,9 @@ export const Recommendations = () => {
         }
 
         getRecommendations()
-    }, [])
+    }, [token])
 
-    console.log(recommendations)
+
     return (
 
         <section className="flex-[1] bg-[#121212] rounded-lg">

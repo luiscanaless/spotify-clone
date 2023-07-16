@@ -77,7 +77,7 @@ export const Playlist = ({ id }) => {
                                             <tr className="hover:bg-[#2A2A2A] " key={track.track.id} onClick={() => changeTrack(track.track.id)}>
                                                 <td className="py-2 px-4">{i + 1}</td>
                                                 <td className="py-2 px-4 max-w-[500px]">
-                                                    <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-4">
                                                         <img
                                                             src={track.track.album.images[0].url}
                                                             alt="Track Image"

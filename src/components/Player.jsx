@@ -52,17 +52,39 @@ export const Player = () => {
 
     useEffect(() => {
         const getPlayback = async () => {
-            const res = await fetch('https://api.spotify.com/v1/me/player', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            try {
+                const res = await fetch('https://api.spotify.com/v1/me/player', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (res.status === 204) {
+
+                    const lastPlayback = await fetch('https://api.spotify.com/v1/me/player/recently-played', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    const { items } = await lastPlayback.json();
+
+                    if (items.length > 0) {
+                        const { track } = items[0];
+                        setTrack(track);
+                        setProgress(0);
+                    }
+
+                } else {
+                    const { item, progress_ms } = await res.json();
+                    setTrack(item);
+                    setProgress(progress_ms);
                 }
-            })
+            } catch (error) {
+                console.error('Error fetching playback:', error);
+            }
+        };
 
-            const { item, progress_ms } = await res.json()
-
-            setTrack(item)
-            setProgress(progress_ms)
-        }
         getPlayback()
     }, [token, setProgress, setTrack])
 
