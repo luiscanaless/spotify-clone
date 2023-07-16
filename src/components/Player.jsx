@@ -1,38 +1,40 @@
 import { faPlay, faPause, faBackwardStep, faForwardStep, faLaptop, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TrackProgressBar } from "./player/TrackProgressBar";
+import { PlayerContext } from "../context/PlayerContext";
 
-const track = {
-    name: "",
-    album: {
-        images: [
-            { url: "" }
-        ]
-    },
-    artists: [
-        { name: "" }
-    ]
-}
+// const track = {
+//     name: "",
+//     album: {
+//         images: [
+//             { url: "" }
+//         ]
+//     },
+//     artists: [
+//         { name: "" }
+//     ]
+// }
 
 export const Player = () => {
 
     const token = localStorage.getItem('token')
 
-    const [is_paused, setPaused] = useState(false);
-    const [is_active, setActive] = useState(false);
-
-    const [player, setPlayer] = useState(undefined);
-
-    const [current_track, setTrack] = useState(track);
-
     const [devices, setDevices] = useState([])
-    const [thisDevice, setThisDevice] = useState()
-
     const [showModal, setShowModal] = useState(false)
 
-    const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
+    const {
+        player,
+        setTrack,
+        setProgress,
+        is_paused,
+        is_active,
+        current_track,
+        progress,
+        duration,
+        thisDevice
+    } = useContext(PlayerContext)
+
 
     useEffect(() => {
         const getDevices = async () => {
@@ -56,69 +58,15 @@ export const Player = () => {
                 }
             })
 
-            const { item, device, progress_ms } = await res.json()
+            const { item, progress_ms } = await res.json()
 
             setTrack(item)
             setProgress(progress_ms)
         }
         getPlayback()
-    }, [token])
-
-    useEffect(() => {
-
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        script.async = true;
-
-        document.body.appendChild(script);
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-
-            const player = new window.Spotify.Player({
-                name: 'Web Playback SDK',
-                getOAuthToken: cb => { cb(token); },
-                volume: 1
-            });
-
-            setPlayer(player);
-
-            player.addListener('ready', async ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-                setThisDevice(device_id)
-            });
-
-            player.addListener('player_state_changed', (state => {
-                if (!state) {
-                    return;
-                }
-
-                if (state.track_window.current_track) {
-                    setTrack(state.track_window.current_track);
-                }
-                setPaused(state.paused);
+    }, [token, setProgress, setTrack])
 
 
-                if (player) {
-                    player.getCurrentState().then(state => {
-                        if (state) {
-                            setActive(true);
-                            setProgress(state.position);
-                            setDuration(state.duration);
-                        } else {
-                            setActive(false);
-                            setProgress(0);
-                            setDuration(0);
-                        }
-                    });
-                }
-
-            }));
-
-
-            player.connect();
-
-        };
-    }, []);
 
     const changeDevice = async (id) => {
         if (showModal) setShowModal(!showModal)
@@ -158,7 +106,7 @@ export const Player = () => {
         return () => {
             clearInterval(timer);
         };
-    }, [is_paused, is_active]);
+    }, [is_paused, is_active, setProgress]);
 
     return (
         <>
