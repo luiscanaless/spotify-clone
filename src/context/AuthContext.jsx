@@ -10,11 +10,13 @@ export const AuthProvider = ({ children }) => {
     const [refreshToken, setRefreshToken] = useState(null)
     const [expiresIn, setExpiresIn] = useState(null)
 
+    const [user, setUser] = useState(null)
+
     useEffect(() => {
         if (!code) return
 
         const getToken = async () => {
-            const res = await fetch('http://localhost:3000/auth/token', {
+            const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/token', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -39,9 +41,9 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
 
         if (!refreshToken) return
-        console.log((expiresIn - 60) * 1000)
+
         const timeout = setInterval(async () => {
-            const res = await fetch('http://localhost:3000/auth/refresh', {
+            const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/refresh', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -59,11 +61,38 @@ export const AuthProvider = ({ children }) => {
         }
     }, [expiresIn, refreshToken])
 
+    useEffect(() => {
+        if (!accessToken) return
+
+        const getUser = async () => {
+            const res = await fetch('https://api.spotify.com/v1/me', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+
+            const { id, display_name, images } = await res.json()
+            setUser(prev => ({
+                ...prev,
+                id,
+                display_name,
+                images: images[0]?.url
+            }))
+        }
+        getUser()
+    }, [accessToken])
+
+
 
 
 
     return (
-        <AuthContext.Provider value={{ accessToken }}>
+        <AuthContext.Provider value={{
+            user,
+            accessToken,
+            setUser
+
+        }}>
             {children}
         </AuthContext.Provider>
     )

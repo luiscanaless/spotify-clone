@@ -1,8 +1,13 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { SocketContext } from "./SocketContext";
+import { AuthContext } from "./AuthContext";
 
 export const PlayerContext = createContext()
 
 export const PlayerProvider = ({ children }) => {
+
+    const { socket } = useContext(SocketContext)
+    const { user } = useContext(AuthContext)
 
     const token = localStorage.getItem('token')
 
@@ -42,6 +47,7 @@ export const PlayerProvider = ({ children }) => {
             });
 
             player.addListener('player_state_changed', (state => {
+
                 if (!state) {
                     return;
                 }
@@ -68,7 +74,21 @@ export const PlayerProvider = ({ children }) => {
             }));
             player.connect();
         };
-    }, [token]);
+    }, [token, socket]);
+
+    useEffect(() => {
+        if (!player) return
+
+        player.addListener('player_state_changed', state => {
+            if (state && user) {
+                socket.emit('user-listening', {
+                    ...user,
+                    listening: state.track_window.current_track.name
+                })
+            }
+        })
+    }, [player, socket, user])
+
 
     return (
         <PlayerContext.Provider value={{

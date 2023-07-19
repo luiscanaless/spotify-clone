@@ -6,6 +6,7 @@ import { PlaylistWrapper } from "../components/PlaylistWrapper"
 import { PlayerProvider } from "../context/PlayerContext"
 import { AuthContext } from "../context/AuthContext"
 import { useContext } from "react"
+import { FriendsActivity } from "../components/FriendsActivity"
 
 export const HomePage = () => {
 
@@ -26,9 +27,7 @@ export const HomePage = () => {
                         <Route path='/' element={<Recommendations />} />
                         <Route path='/playlist/:id' element={<PlaylistWrapper />} />
                     </Routes>
-                    <div className="text-white flex-[0_0_400px] bg-[#121212] ml-auto">
-                        gaa
-                    </div>
+                    <FriendsActivity />
                 </div>
                 <div className="fixed bottom-0">
                     <Player />
