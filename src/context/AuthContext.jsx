@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
             localStorage.setItem('token', access_token)
 
-            window.history.pushState({}, null, '/')
+            window.history.pushState({}, null, '/spotify-clone/')
         }
 
         getToken()
