@@ -42,7 +42,6 @@ export const PlayerProvider = ({ children }) => {
             setPlayer(player);
 
             player.addListener('ready', async ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
                 setThisDevice(device_id)
             });
 

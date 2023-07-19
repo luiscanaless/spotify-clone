@@ -12,7 +12,6 @@ export const FriendsActivity = () => {
     useEffect(() => {
         socket.on('users', users => {
             setUsers(users)
-            console.log(Object.entries(users))
         })
     }, [socket])
 
