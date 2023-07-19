@@ -24,8 +24,8 @@ export const HomePage = () => {
                 <div className="m-2 flex max-h-[870px]  gap-3">
                     <Sidebar />
                     <Routes>
-                        <Route path='/' element={<Recommendations />} />
-                        <Route path='/playlist/:id' element={<PlaylistWrapper />} />
+                        <Route path='/spotify-clone/' element={<Recommendations />} />
+                        <Route path='/spotify-clone/playlist/:id' element={<PlaylistWrapper />} />
                     </Routes>
                     <FriendsActivity />
                 </div>
