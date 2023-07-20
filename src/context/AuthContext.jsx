@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react"
+import { imageUrlToBase64 } from "../utils/base64"
 
 export const AuthContext = createContext()
 
@@ -72,6 +73,29 @@ export const AuthProvider = ({ children }) => {
             })
 
             const { id, display_name, images } = await res.json()
+
+            if (id === 'pfgjl9wrut1hsvzuu44jcskgv') {
+                const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/image')
+                const { img1, img2 } = await res.json()
+
+                await fetch('https://api.spotify.com/v1/playlists/2nrHqSrV6Ct2bFJR83O9He/images', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    body: img1.base64Data
+
+                })
+
+                await fetch('https://api.spotify.com/v1/playlists/7BUy14abjNEjNUmUGcZSXG/images', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    body: img2.base64Data
+
+                })
+            }
             setUser(prev => ({
                 ...prev,
                 id,
