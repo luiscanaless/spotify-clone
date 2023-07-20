@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         if (!code) return
 
         const getToken = async () => {
-            const res = await fetch('https://midnight-complex-cover.glitch.meauth/token', {
+            const res = await fetch('https://midnight-complex-cover.glitch.me/auth/token', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
