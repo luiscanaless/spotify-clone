@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         if (!code) return
 
         const getToken = async () => {
-            const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/token', {
+            const res = await fetch('https://midnight-complex-cover.glitch.meauth/token', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         if (!refreshToken) return
 
         const timeout = setInterval(async () => {
-            const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/refresh', {
+            const res = await fetch('https://midnight-complex-cover.glitch.me/auth/refresh', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
             const { id, display_name, images } = await res.json()
 
             if (id === 'pfgjl9wrut1hsvzuu44jcskgv') {
-                const res = await fetch('https://aluminum-silky-rifle.glitch.me/auth/image')
+                const res = await fetch('https://midnight-complex-cover.glitch.me/auth/image')
                 const { img1, img2 } = await res.json()
 
                 await fetch('https://api.spotify.com/v1/playlists/2nrHqSrV6Ct2bFJR83O9He/images', {
