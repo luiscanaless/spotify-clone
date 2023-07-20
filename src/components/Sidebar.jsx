@@ -48,7 +48,7 @@ export const Sidebar = () => {
                     {
                         playlists.map(playlist => (
                             <li key={playlist.id} className="hover:bg-[#1A1A1A] p-2 rounded-md">
-                                <Link to={`/playlist/${playlist.id}`}>
+                                <Link to={`/spotify-clone/playlist/${playlist.id}`}>
                                     <div className="flex items-center gap-3">
                                         <img
                                             src={playlist.images[0]?.url}
